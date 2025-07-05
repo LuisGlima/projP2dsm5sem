@@ -24,7 +24,48 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('DROP TABLE IF EXISTS usuarios');
+          await db.execute('DROP TABLE IF EXISTS pokemons');
+          await db.execute('''
+            CREATE TABLE usuarios (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              email TEXT UNIQUE,
+              senha TEXT
+            )
+          ''');
+
+          await db.execute('''
+            CREATE TABLE pokemons (
+              id INTEGER PRIMARY KEY,
+              nome TEXT,
+              tipo TEXT,
+              imagem TEXT
+            )
+          ''');
+
+          await db.insert('usuarios', {'email': 'fatec@pokemon.com', 'senha': 'pikachu'});
+
+          List<Map<String, dynamic>> pokemons = [
+            {'id': 1, 'nome': 'Bulbasaur', 'tipo': 'Grass/Poison', 'imagem': 'assets/images/bulbasaur.png'},
+            {'id': 2, 'nome': 'Ivysaur', 'tipo': 'Grass/Poison', 'imagem': 'assets/images/ivysaur.png'},
+            {'id': 3, 'nome': 'Venusaur', 'tipo': 'Grass/Poison', 'imagem': 'assets/images/venusaur.png'},
+            {'id': 4, 'nome': 'Charmander', 'tipo': 'Fire', 'imagem': 'assets/images/charmander.png'},
+            {'id': 5, 'nome': 'Charmeleon', 'tipo': 'Fire', 'imagem': 'assets/images/charmeleon.png'},
+            {'id': 6, 'nome': 'Charizard', 'tipo': 'Fire/Flying', 'imagem': 'assets/images/charizard.png'},
+            {'id': 7, 'nome': 'Squirtle', 'tipo': 'Water', 'imagem': 'assets/images/squirtle.png'},
+            {'id': 8, 'nome': 'Wartortle', 'tipo': 'Water', 'imagem': 'assets/images/wartortle.png'},
+            {'id': 9, 'nome': 'Blastoise', 'tipo': 'Water', 'imagem': 'assets/images/blastoise.png'},
+            {'id': 10, 'nome': 'Caterpie', 'tipo': 'Bug', 'imagem': 'assets/images/caterpie.png'},
+          ];
+
+          for (var p in pokemons) {
+            await db.insert('pokemons', p);
+          }
+        }
+      },
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE usuarios (
@@ -43,7 +84,7 @@ class DatabaseHelper {
           )
         ''');
 
-        await db.insert('users', {'email': 'fatec@pokemon.com', 'senha': 'pikachu'});
+        await db.insert('usuarios', {'email': 'fatec@pokemon.com', 'senha': 'pikachu'});
 
         List<Map<String, dynamic>> pokemons = [
           {'id': 1, 'nome': 'Bulbasaur', 'tipo': 'Grass/Poison', 'imagem': 'assets/images/bulbasaur.png'},
@@ -68,7 +109,7 @@ class DatabaseHelper {
   Future<Usuario?> getUser(String email, String senha) async {
     final db = await database;
     final result = await db.query(
-      'users',
+      'usuarios',
       where: 'email = ? AND senha = ?',
       whereArgs: [email, senha],
     );
