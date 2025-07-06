@@ -29,27 +29,84 @@ class _TelaLoginState extends State<TelaLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: "Email"),
-                validator: (value) => value!.contains('@') ? null : "Email inválido",
-              ),
-              TextFormField(
-                controller: _passController,
-                decoration: const InputDecoration(labelText: "Senha"),
-                obscureText: true,
-                validator: (value) => value!.isEmpty ? "Senha obrigatória" : null,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: _login, child: const Text("Entrar")),
-            ],
+      appBar: AppBar(
+        title: const Text(
+          "Login",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.redAccent, // Pokedex red
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(32.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/logo.png',
+                  height: 100,
+                ),
+                const SizedBox(height: 40),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: Colors.redAccent, width: 2.0), // Red border on focus
+                    ),
+                    prefixIcon: const Icon(Icons.email, color: Colors.redAccent),
+                  ),
+                  validator: (value) => value!.contains('@') ? null : "Email inválido",
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _passController,
+                  decoration: InputDecoration(
+                    labelText: "Senha",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: Colors.redAccent, width: 2.0),
+                    ),
+                    prefixIcon: const Icon(Icons.lock, color: Colors.redAccent),
+                  ),
+                  obscureText: true,
+                  validator: (value) => value!.isEmpty ? "Senha obrigatória" : null,
+                ),
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: _login,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent, // Pokedex red button
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 5,
+                    ),
+                    child: const Text(
+                      "Entrar",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
